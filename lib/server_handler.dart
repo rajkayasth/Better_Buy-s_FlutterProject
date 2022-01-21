@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import './models/sellers.dart';
 import 'package:http/http.dart' as http;
+import './models/product.dart';
 
 class ServerHandler{
   String _baseUrl = "https://whoisrishav.com/pk/better-buys/api";
@@ -36,6 +37,30 @@ class ServerHandler{
       rethrow;
     }
   }
+  ///Getting Products from Seller
+  Future<List<Product>> getProductsSeller(int? sellerId) async {
+    try{
+      List<Product> products = [];
+      
+      http.Response response = await http.get(Uri.parse('$_baseUrl/gen/products?seller_id= $sellerId'));
+
+
+      dynamic productsList = json.decode(response.body)['products'];
+
+      print(products);
+
+      for(Map m in productsList){
+        products.add(Product.fromMap(m));
+      }
+
+      return products ;
+
+    } catch(e){
+      print('Server Handler : error : ' + e.toString());
+      rethrow;
+    }
+    }
+
 }
 
 
